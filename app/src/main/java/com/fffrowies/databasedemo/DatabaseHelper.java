@@ -1,6 +1,8 @@
 package com.fffrowies.databasedemo;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -49,5 +51,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void close() {
         database.close();
+    }
+
+    public void add(String name, String address) {
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NAME, name);
+        contentValues.put(ADDRESS, address);
+
+        database.insert(TABLE_NAME, null, contentValues);
+    }
+
+    public Cursor getAllEmployees() {
+
+        String[] projection = { _ID, NAME, ADDRESS };
+
+        Cursor cursor = database.query(TABLE_NAME, projection, null,
+                null, null, null, null);
+
+        return cursor;
     }
 }

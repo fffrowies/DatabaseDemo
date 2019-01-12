@@ -2,6 +2,10 @@ package com.fffrowies.databasedemo;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,13 +16,16 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private DatabaseHelper myHelper;
 
     private ListView listView;
 
     private SimpleCursorAdapter adapter;
+
+    private static final int LOADER_ID = 1976;
 
     final String[] from =
             new String[] { DatabaseHelper._ID, DatabaseHelper.NAME, DatabaseHelper.ADDRESS };
@@ -36,12 +43,12 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.list_view);
         listView.setEmptyView(findViewById(R.id.empty));
 
-        Cursor c = myHelper.getAllEmployees();
-
         adapter = new SimpleCursorAdapter(
-                this, R.layout.activity_view_record, c, from, to, 0);
+                this, R.layout.activity_view_record, null, from, to, 0);
 
         listView.setAdapter(adapter);
+
+        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -80,5 +87,26 @@ public class MainActivity extends AppCompatActivity {
             startActivity(add_mem);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, @Nullable Bundle bundle) {
+        return new MyLoader(this, myHelper);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        // Swap the new cursor in. (The fragment will take care of closing the
+        // old cursor once we return).
+        adapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        // This is called when the last Cursor provided to onLoadFinished()
+        // above is about to be closed. We need to make sure we are no
+        // longer using it.
+        adapter.swapCursor(null);
     }
 }

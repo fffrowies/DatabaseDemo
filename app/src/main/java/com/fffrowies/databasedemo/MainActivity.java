@@ -6,8 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +42,27 @@ public class MainActivity extends AppCompatActivity {
                 this, R.layout.activity_view_record, c, from, to, 0);
 
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                TextView idTextView = view.findViewById(R.id.id);
+                TextView nameTextView = view.findViewById(R.id.name);
+                TextView addressTextView = view.findViewById(R.id.address);
+
+                String id = idTextView.getText().toString();
+                String title = nameTextView.getText().toString();
+                String desc = addressTextView.getText().toString();
+
+                Intent modify_intent =
+                        new Intent(getApplicationContext(), ModifyEmployeeActivity.class);
+                modify_intent.putExtra("name", title);
+                modify_intent.putExtra("address", desc);
+                modify_intent.putExtra("id", id);
+
+                startActivity(modify_intent);
+            }
+        });
     }
 
     @Override

@@ -71,4 +71,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return cursor;
     }
+
+    public int update(long _id, String name, String address) {
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(NAME, name);
+        contentValues.put(ADDRESS, address);
+
+        int count = database.update(
+                TABLE_NAME, contentValues, this._ID + " = " + _id, null);
+        return count;
+    }
+
+    public void delete(long _id) {
+        database.delete(TABLE_NAME, _ID + " = " + _id, null);
+    }
 }

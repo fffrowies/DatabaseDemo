@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Database Demo</string>
+    <string name="enter_name">Name</string>
+    <string name="add_record">Add Record</string>
+    <string name="btn_update">Update</string>
+    <string name="btn_delete">Delete</string>
+    <string name="empty_list_text">No records found</string>
+    <string name="enter_address">Address</string>
 </resources>
